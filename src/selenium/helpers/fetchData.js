@@ -55,17 +55,16 @@ export const fetchSingleProductInfo = async (driver, url) => {
   try {
     await driver.get(url);
     await driver.wait(
-      until.elementLocated(By.className("wrapper-reviews")),
+      until.elementLocated(By.className("header__title")),
       5000
     );
-    let productCode = await driver
-      .findElement(By.className("header-product__code"))
-      .getText();
-    productCode = productCode.replace(/\D/g, "");
-    const productTitle = await driver.findElement(By.css("h1")).getText();
-    const productPrice = await driver
-      .findElement(By.className("price-template__text"))
-      .getText();
+    let productData = await driver
+      .findElement(By.className("header-product"))
+      .getAttribute("data-product");
+    productData = await JSON.parse(productData);
+    const productCode = productData.id_product;
+    const productTitle = productData.fullTitle;
+    const productPrice = productData.priceTemplate.trim();
     const productImageUrl = await driver
       .findElement({
         className: "showcase-product__big-img",

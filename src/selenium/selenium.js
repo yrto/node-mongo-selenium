@@ -19,7 +19,7 @@ const fetchProductDataAndImages = async () => {
     .forBrowser("firefox")
     .setFirefoxOptions(options)
     .build();
-  const links = await fetchListOfProductLinks(driver, "tv samsung", 2);
+  const links = await fetchListOfProductLinks(driver, "tv lg", 5);
   const products = await nonConcurrentMapOfLinks(
     driver,
     links,
