@@ -2,6 +2,16 @@ import { By, Key, until } from "selenium-webdriver";
 import { nonConcurrentMapOfWebElements } from "./nonConcurrent.js";
 import { downloadFile } from "./downloadFile.js";
 
+// custom error
+
+class SeleniumError extends Error {
+  constructor(params) {
+    super(`Selenium says: ${params}`);
+  }
+}
+
+// functions
+
 export const fetchListOfProductLinks = async (
   driver,
   searchText,
@@ -27,7 +37,7 @@ export const fetchListOfProductLinks = async (
     console.log(linkList);
     return linkList;
   } catch (error) {
-    console.log(error);
+    throw new SeleniumError(error);
   }
 };
 
@@ -43,11 +53,11 @@ export const fetchSingleComment = async (comment) => {
       .getText();
     const commentData = {
       author: author !== "None" ? author : "Anônimo",
-      body: body ? body : "Sem comentário",
+      body,
     };
     return commentData;
   } catch (error) {
-    console.log(error);
+    throw new SeleniumError(error);
   }
 };
 
@@ -91,6 +101,6 @@ export const fetchSingleProductInfo = async (driver, url) => {
     };
     return productInfo;
   } catch (error) {
-    console.log(error);
+    throw new SeleniumError(error);
   }
 };

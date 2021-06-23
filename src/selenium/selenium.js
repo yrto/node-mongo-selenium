@@ -7,33 +7,37 @@ import {
 import fs from "fs";
 import copyDir from "./helpers/copyDir.js";
 
-// gecko driver setup
+// gecko driver options
 
 import firefox from "selenium-webdriver/firefox.js";
 let options = new firefox.Options(); // .headless();
 
-// main
+// fetchProductDataAndImages
 
 const fetchProductDataAndImages = async () => {
   const driver = new Builder()
     .forBrowser("firefox")
     .setFirefoxOptions(options)
     .build();
-  const links = await fetchListOfProductLinks(driver, "tv lg", 5);
-  const products = await nonConcurrentMapOfLinks(
-    driver,
-    links,
-    fetchSingleProductInfo
-  );
-  console.log(products);
+  try {
+    const links = await fetchListOfProductLinks(driver, "tv lg", 5);
+    const products = await nonConcurrentMapOfLinks(
+      driver,
+      links,
+      fetchSingleProductInfo
+    );
+    console.log(products);
+    // move images
+    await copyDir("./src/selenium/downloads", "./src/images");
+    // save JSON file with infos
+    fs.writeFileSync(
+      "./src/selenium/data/data.json",
+      JSON.stringify({ products: products })
+    );
+  } catch (error) {
+    console.log(`${error}!`);
+  }
   await driver.quit();
-  // move images
-  await copyDir("./src/selenium/downloads", "./src/images");
-  // save to file
-  fs.writeFileSync(
-    "./src/selenium/data/data.json",
-    JSON.stringify({ products: products })
-  );
 };
 
 // main
