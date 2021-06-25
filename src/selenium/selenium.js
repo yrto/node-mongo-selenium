@@ -4,7 +4,7 @@ import {
   fetchListOfProductLinks,
   fetchSingleProductInfo,
 } from "./helpers/fetchData.js";
-import copyDir from "./helpers/copyDir.js";
+import { copyDir, moveDir } from "./helpers/handleFiles.js";
 import saveDataAsJson from "./helpers/saveDataAsJson.js";
 
 // gecko driver options
@@ -32,10 +32,12 @@ const fetchProductDataAndImages = async () => {
     );
     // print products
     console.log(products);
-    // move images to outside selenium folder
-    await copyDir("./src/selenium/downloads", "./src/images");
-    // save JSON file with infos
+    // move images
+    await moveDir("./src/selenium/downloads", "./src/images");
+    // save data to JSON file
     await saveDataAsJson("./src/selenium/data/", "data.json", { products });
+    // copy JSON file
+    await copyDir("./src/selenium/data", "./src/data");
     // catch
   } catch (error) {
     // print errors

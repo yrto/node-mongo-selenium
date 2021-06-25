@@ -1,3 +1,4 @@
+import { MONGO_URL } from "./config.js";
 import mongoose from "mongoose";
 
 import saveComment from "./controllers/saveComment.js";
@@ -8,7 +9,7 @@ import savePerson from "./controllers/savePerson.js";
 
 const connectToMongo = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/test", {
+    await mongoose.connect(MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

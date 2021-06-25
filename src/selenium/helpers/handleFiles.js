@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 
-const copyDir = async (src, dest) => {
+const handleFiles = async (src, dest, operation) => {
   await fs.mkdir(dest, { recursive: true });
   let entries = await fs.readdir(src, { withFileTypes: true });
 
@@ -13,11 +13,19 @@ const copyDir = async (src, dest) => {
       await copyDir(srcPath, destPath);
     } else {
       await fs.copyFile(srcPath, destPath);
-      await fs.rm(srcPath);
+      if (operation === "move") await fs.rm(srcPath);
     }
   }
 };
 
-export default copyDir;
+const copyDir = async (src, dest) => {
+  await handleFiles(src, dest, "copy");
+};
+
+const moveDir = async (src, dest) => {
+  await handleFiles(src, dest, "move");
+};
+
+export { copyDir, moveDir };
 
 // https://stackoverflow.com/questions/39106516/node-fs-copy-a-folder
